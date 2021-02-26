@@ -40,7 +40,6 @@ namespace TodoAcceptanceTests
                 driver.Navigate().GoToUrl(_url);
                 IList<IWebElement> results = driver.FindElements(By.CssSelector("#todos li"));
 
-                Assert.IsTrue(results.Count == 2);
                 Assert.AreEqual(_todos.Count, results.Count);
                 StringAssert.Contains(_todos[0].Description, results[0].GetAttribute("textContent"));
                 StringAssert.Contains(_todos[1].Description, results[1].GetAttribute("textContent"));
@@ -53,7 +52,7 @@ namespace TodoAcceptanceTests
         {
             using (IWebDriver driver = new ChromeDriver())
             {
-                driver.Navigate().GoToUrl("https://localhost:5001/Todos");
+                driver.Navigate().GoToUrl(_url);
                 driver.FindElement(By.CssSelector("#todo")).SendKeys(_todo.Description);
                 driver.FindElement(By.CssSelector("form")).Submit();
 
@@ -75,7 +74,7 @@ namespace TodoAcceptanceTests
         {
             using (IWebDriver driver = new ChromeDriver())
             {
-                driver.Navigate().GoToUrl("https://localhost:5001/Todos");
+                driver.Navigate().GoToUrl(_url);
                 driver.FindElement(By.CssSelector("form")).Submit();
 
                 IWebElement result = driver.FindElement(By.CssSelector(".form-error"));
@@ -90,7 +89,7 @@ namespace TodoAcceptanceTests
         {
             using (IWebDriver driver = new ChromeDriver())
             {
-                driver.Navigate().GoToUrl("https://localhost:5001/Todos");
+                driver.Navigate().GoToUrl(_url);
                 driver.FindElement(By.CssSelector("#todo")).SendKeys(_todo.Description);
                 driver.FindElement(By.CssSelector("form")).Submit();
 
