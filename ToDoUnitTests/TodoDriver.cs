@@ -49,6 +49,43 @@ namespace TodoAcceptanceTests
             _db.Reset();
         }
 
+        public void ShowsLineAccrossCompletedTodo()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl("https://localhost:5001/Todos");
+                driver.FindElement(By.CssSelector("#todo")).SendKeys(_todo.Description);
+                driver.FindElement(By.CssSelector("form")).Submit();
+
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+                wait.Until(driver => driver.FindElement(By.CssSelector("#todos li:first-child")).Displayed);
+
+                IWebElement newTodo = driver.FindElement(By.CssSelector("#todos li:first-child span"));
+
+                IWebElement toggleCrossBtn = driver.FindElement(By.CssSelector(".toggleCrossBtn"));
+                toggleCrossBtn.Click();
+
+                Assert.IsTrue(newTodo.GetAttribute("class").Contains("complete"));
+            }
+
+            _db.Reset();
+        }
+
+        public void ShowsErrorWhenAddingAnEmptyTodo()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl("https://localhost:5001/Todos");
+                driver.FindElement(By.CssSelector("form")).Submit();
+
+                IWebElement result = driver.FindElement(By.CssSelector(".form-error"));
+
+                Assert.IsNotNull(result);
+            }
+
+            _db.Reset();
+        }
+
         public void ShowsNewlyCreatedTodos()
         {
             using (IWebDriver driver = new ChromeDriver())
