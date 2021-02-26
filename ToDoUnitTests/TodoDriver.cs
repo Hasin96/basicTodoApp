@@ -49,7 +49,7 @@ namespace TodoAcceptanceTests
             _db.Reset();
         }
 
-        public void ShowsNewlyCreatedTodo()
+        public void ShowsNewlyCreatedTodos()
         {
             using (IWebDriver driver = new ChromeDriver())
             {
@@ -64,6 +64,17 @@ namespace TodoAcceptanceTests
 
                 Assert.IsNotNull(newTodo);
                 StringAssert.Contains(_todo.Description, newTodo.GetAttribute("textContent"));
+
+                driver.FindElement(By.CssSelector("#todo")).SendKeys("test");
+                driver.FindElement(By.CssSelector("form")).Submit();
+
+                wait = new WebDriverWait(driver, TimeSpan.FromSeconds(100));
+                wait.Until(driver => driver.FindElement(By.CssSelector("#todos li:first-child")).Displayed);
+
+                newTodo = driver.FindElement(By.CssSelector("#todos li:first-child"));
+
+                Assert.IsNotNull(newTodo);
+                StringAssert.Contains("test", newTodo.GetAttribute("textContent"));
             }
 
             _db.Reset();

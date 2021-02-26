@@ -40,43 +40,9 @@ namespace TodoAcceptanceTests
         }
 
         [Test]
-        public void AddNewTodo()
+        public void AddTwoNewTodos()
         {
-            _driver.ShowsNewlyCreatedTodo();
-        }
-
-        [Test]
-        public void AddTwoNewTodo()
-        {
-            var _todo = new Todo() { Description = "Description" };
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                driver.Navigate().GoToUrl("https://localhost:5001/Todos");
-                driver.FindElement(By.CssSelector("#todo")).SendKeys(_todo.Description);
-                driver.FindElement(By.CssSelector("form")).Submit();
-
-                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(100));
-                wait.Until(driver => driver.FindElement(By.CssSelector("#todos li:first-child")).Displayed);
-
-                IWebElement newTodo = driver.FindElement(By.CssSelector("#todos li:first-child"));
-
-                Assert.IsNotNull(newTodo);
-                StringAssert.Contains(_todo.Description, newTodo.GetAttribute("textContent"));
-
-                driver.FindElement(By.CssSelector("#todo")).SendKeys("test");
-                driver.FindElement(By.CssSelector("form")).Submit();
-
-                wait = new WebDriverWait(driver, TimeSpan.FromSeconds(100));
-                wait.Until(driver => driver.FindElement(By.CssSelector("#todos li:first-child")).Displayed);
-
-                newTodo = driver.FindElement(By.CssSelector("#todos li:first-child"));
-
-                Assert.IsNotNull(newTodo);
-                StringAssert.Contains("test", newTodo.GetAttribute("textContent"));
-            }
-
-            _context.Todos.RemoveRange(_context.Todos);
-            _context.SaveChanges();
+            _driver.ShowsNewlyCreatedTodos();
         }
 
         [Test]
