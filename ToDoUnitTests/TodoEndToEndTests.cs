@@ -20,7 +20,6 @@ namespace TodoAcceptanceTests
     {
         private TodoDriver _driver = new TodoDriver();
         private TodoContext _context = new TodoContext();
-        private Todo _todo;
 
         public TodoEndToEndTests()
         {
@@ -30,8 +29,6 @@ namespace TodoAcceptanceTests
         [SetUp]
         public void SetUp()
         {
-            _todo = new Todo() { Description = "Description" };
-
             _context.Todos.RemoveRange(_context.Todos);
             _context.SaveChanges();
         }
@@ -45,28 +42,13 @@ namespace TodoAcceptanceTests
         [Test]
         public void AddNewTodo()
         {
-            using (IWebDriver driver = new ChromeDriver())
-            {
-                driver.Navigate().GoToUrl("https://localhost:5001/Todos");
-                driver.FindElement(By.CssSelector("#todo")).SendKeys(_todo.Description);
-                driver.FindElement(By.CssSelector("form")).Submit();
-
-                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(100));
-                wait.Until(driver => driver.FindElement(By.CssSelector("#todos li:first-child")).Displayed);
-
-                IWebElement newTodo = driver.FindElement(By.CssSelector("#todos li:first-child"));
-
-                Assert.IsNotNull(newTodo);
-                StringAssert.Contains(_todo.Description, newTodo.GetAttribute("textContent"));
-            }
-
-            _context.Todos.RemoveRange(_context.Todos);
-            _context.SaveChanges();
+            _driver.ShowsNewlyCreatedTodo();
         }
 
         [Test]
         public void AddTwoNewTodo()
         {
+            var _todo = new Todo() { Description = "Description" };
             using (IWebDriver driver = new ChromeDriver())
             {
                 driver.Navigate().GoToUrl("https://localhost:5001/Todos");
@@ -114,6 +96,7 @@ namespace TodoAcceptanceTests
         [Test]
         public void AddTodoAndMarkComplete_ShouldHaveCrossClass()
         {
+            var _todo = new Todo() { Description = "Description" };
             using (IWebDriver driver = new ChromeDriver())
             {
                 driver.Navigate().GoToUrl("https://localhost:5001/Todos");

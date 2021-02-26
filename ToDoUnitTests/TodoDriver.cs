@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +13,8 @@ namespace TodoAcceptanceTests
     {
         private Database _db;
         private List<Todo> _todos;
+        private Todo _todo;
+
 
         private readonly string _url = "https://localhost:5001/Todos";
 
@@ -24,6 +27,8 @@ namespace TodoAcceptanceTests
                 new Todo() { Description = "test" },
                 new Todo() { Description = "test1"}
             };
+
+            _todo = new Todo() { Description = "Description" };
         }
 
         public void ShowsAllTodos()
@@ -39,6 +44,26 @@ namespace TodoAcceptanceTests
                 Assert.AreEqual(_todos.Count, results.Count);
                 StringAssert.Contains(_todos[0].Description, results[0].GetAttribute("textContent"));
                 StringAssert.Contains(_todos[1].Description, results[1].GetAttribute("textContent"));
+            }
+
+            _db.Reset();
+        }
+
+        public void ShowsNewlyCreatedTodo()
+        {
+            using (IWebDriver driver = new ChromeDriver())
+            {
+                driver.Navigate().GoToUrl("https://localhost:5001/Todos");
+                driver.FindElement(By.CssSelector("#todo")).SendKeys(_todo.Description);
+                driver.FindElement(By.CssSelector("form")).Submit();
+
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(100));
+                wait.Until(driver => driver.FindElement(By.CssSelector("#todos li:first-child")).Displayed);
+
+                IWebElement newTodo = driver.FindElement(By.CssSelector("#todos li:first-child"));
+
+                Assert.IsNotNull(newTodo);
+                StringAssert.Contains(_todo.Description, newTodo.GetAttribute("textContent"));
             }
 
             _db.Reset();
