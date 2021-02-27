@@ -19,19 +19,14 @@ namespace TodoAcceptanceTests
     public class TodoEndToEndTests
     {
         private TodoDriver _driver = new TodoDriver();
-        private TodoContext _context = new TodoContext();
+      
 
         public TodoEndToEndTests()
         {
           
         }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _context.Todos.RemoveRange(_context.Todos);
-            _context.SaveChanges();
-        }
+     
 
         [Test]
         public void GetAllTodo()
@@ -57,11 +52,6 @@ namespace TodoAcceptanceTests
             _driver.ShowsLineAccrossCompletedTodo();
         }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _context.Todos.RemoveRange(_context.Todos);
-            _context.SaveChanges();
-        }
+      
     }
 }
