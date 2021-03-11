@@ -9,7 +9,7 @@ namespace TodoAcceptanceTests
     public class Database
     {
         private TodoContext _context = new TodoContext();
-        public async void Add(Todo todo)
+        public void Add(Todo todo)
         {
             _context.Add(todo);
             _context.SaveChanges();

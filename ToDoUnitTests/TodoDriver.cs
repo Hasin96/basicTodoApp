@@ -92,7 +92,7 @@ namespace TodoAcceptanceTests
                 driver.Navigate().GoToUrl(_url);
                 driver.FindElement(By.CssSelector("#todo")).SendKeys(_todo.Description);
                 driver.FindElement(By.CssSelector("form")).Submit();
-
+                
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(100));
                 wait.Until(driver => driver.FindElement(By.CssSelector("#todos li:first-child")).Displayed);
 
